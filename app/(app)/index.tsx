@@ -1,8 +1,14 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from '../../components/Button';
 import { Text } from '../../components/Text';
+
+interface StyleProps {
+  container: ViewStyle;
+  title: ViewStyle;
+  button: ViewStyle;
+}
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -13,7 +19,9 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View 
+      style={styles.container}
+    >
       <Text style={styles.title}>Bienvenido a Usuarios</Text>
       <Button
         text="Cerrar Sesión"

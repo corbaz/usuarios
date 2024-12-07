@@ -1,13 +1,13 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Slot, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useSegments, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View } from 'react-native';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -22,32 +22,35 @@ export default function RootLayout() {
   const router = useRouter();
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    if (!loaded) return;
 
-  useEffect(() => {
-    checkAuth();
-  }, [segments]);
+    async function prepare() {
+      try {
+        // Pre-load fonts, make any API calls you need to do here
+        const userToken = await AsyncStorage.getItem('userToken');
+        
+        // Ocultar el splash screen después de cargar los recursos
+        await SplashScreen.hideAsync();
 
-  const checkAuth = async () => {
-    try {
-      const userToken = await AsyncStorage.getItem('userToken');
-      const inAuthGroup = segments[0] === '(auth)';
-      const inAppGroup = segments[0] === '(app)';
-
-      if (!userToken && !inAuthGroup) {
-        // No token, redirect to login
-        router.replace('/login');
-      } else if (userToken && !inAppGroup) {
-        // Has token but not in app group, redirect to app
-        router.replace('/(app)');
+        // Navegar según el estado de autenticación
+        // Use type assertion or broader type checking
+        const currentSegment = segments[0] as string;
+        
+        if (!userToken) {
+          router.replace('/login');
+        } else if (currentSegment === '(auth)') {
+          // Handle auth-related segments specifically
+          router.replace('/home');
+        } else {
+          router.replace('/home');
+        }
+      } catch (e) {
+        console.warn(e);
       }
-    } catch (error) {
-      console.error('Error checking auth:', error);
     }
-  };
+
+    prepare();
+  }, [loaded, segments]);
 
   if (!loaded) {
     return null;
@@ -55,11 +58,7 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(app)" options={{ headerShown: false }} />
-        <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen name="register" options={{ headerShown: false }} />
-      </Stack>
+      <Slot />
       <StatusBar style="auto" />
     </ThemeProvider>
   );

@@ -15,7 +15,7 @@ export default function LoginScreen() {
         // Por ahora, simularemos un login exitoso
         await AsyncStorage.setItem('userToken', 'dummy-token');
         await AsyncStorage.setItem('userEmail', email);
-        router.replace('/(tabs)');
+        router.replace('/home'); // Cambiado a la ruta directa /home
       } else {
         setError('Por favor complete todos los campos');
       }
@@ -31,6 +31,7 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Iniciar Sesión</Text>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -46,7 +47,6 @@ export default function LoginScreen() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
       <Button title="Iniciar Sesión" onPress={handleLogin} />
       <View style={styles.registerContainer}>
         <Text>¿No tienes una cuenta? </Text>

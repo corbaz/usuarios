@@ -1,6 +1,10 @@
 import React from 'react';
-import { Text as RNText, TextProps } from 'react-native';
+import { Text as RNText, TextProps, TextStyle } from 'react-native';
 
-export function Text(props: TextProps) {
-  return <RNText {...props} />;
+type CustomTextProps = Omit<TextProps, 'pointerEvents'> & {
+  style?: TextStyle;
+};
+
+export function Text({ style, ...props }: CustomTextProps) {
+  return <RNText style={[style]} {...props} />;
 }

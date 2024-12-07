@@ -30,7 +30,7 @@ export default function RegisterScreen() {
         await AsyncStorage.setItem('userToken', 'dummy-token');
         await AsyncStorage.setItem('userEmail', email);
         
-        router.replace('/(tabs)');
+        router.replace('/home');
       } else {
         setError('Por favor complete todos los campos');
       }
