@@ -30,27 +30,31 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Iniciar Sesión</Text>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Contraseña"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button title="Iniciar Sesión" onPress={handleLogin} />
-      <View style={styles.registerContainer}>
-        <Text>¿No tienes una cuenta? </Text>
-        <Button title="Registrarse" onPress={goToRegister} />
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Iniciar Sesión</Text>
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Contraseña"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <View style={styles.buttonContainer}>
+          <Button title="Iniciar Sesión" onPress={handleLogin} />
+        </View>
+        <View style={styles.registerContainer}>
+          <Text>¿No tienes una cuenta? </Text>
+          <Button title="Registrarse" onPress={goToRegister} />
+        </View>
       </View>
     </View>
   );
@@ -60,24 +64,48 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
+    backgroundColor: '#f5f5f5',
+  },
+  formContainer: {
+    width: '100%',
+    maxWidth: 400,
+    backgroundColor: 'white',
+    padding: 30,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
     textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#333',
   },
   input: {
-    height: 40,
+    height: 45,
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 5,
+    borderRadius: 8,
     marginBottom: 15,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
+    backgroundColor: '#fff',
   },
   error: {
-    color: 'red',
-    marginBottom: 10,
+    color: '#ff3b30',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    marginTop: 10,
   },
   registerContainer: {
     marginTop: 20,
