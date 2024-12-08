@@ -1,22 +1,19 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, TouchableOpacityProps, Text, ViewStyle, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, TouchableOpacityProps, Text, ViewStyle } from 'react-native';
 
 interface ButtonProps extends TouchableOpacityProps {
   text: string;
   style?: ViewStyle;
-  pointerEvents?: 'auto' | 'none' | 'box-none' | 'box-only';
 }
 
-export function Button({ text, style, pointerEvents, ...props }: ButtonProps) {
+export function Button({ text, style, ...props }: ButtonProps) {
   return (
-    <View pointerEvents={pointerEvents}>
-      <TouchableOpacity 
-        style={[styles.button, style]} 
-        {...props}
-      >
-        <Text style={styles.text}>{text}</Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity 
+      style={[styles.button, style]} 
+      {...props}
+    >
+      <Text style={styles.text}>{text}</Text>
+    </TouchableOpacity>
   );
 }
 

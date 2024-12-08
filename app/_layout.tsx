@@ -7,9 +7,8 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -17,6 +16,9 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+
+  console.log('Current Platform:', Platform.OS);
+  console.log('Is iOS?:', Platform.OS === 'ios');
 
   const segments = useSegments();
   const router = useRouter();
@@ -26,20 +28,14 @@ export default function RootLayout() {
 
     async function prepare() {
       try {
-        // Pre-load fonts, make any API calls you need to do here
         const userToken = await AsyncStorage.getItem('userToken');
-        
-        // Ocultar el splash screen después de cargar los recursos
         await SplashScreen.hideAsync();
 
-        // Navegar según el estado de autenticación
-        // Use type assertion or broader type checking
         const currentSegment = segments[0] as string;
         
         if (!userToken) {
           router.replace('/login');
         } else if (currentSegment === '(auth)') {
-          // Handle auth-related segments specifically
           router.replace('/home');
         } else {
           router.replace('/home');
@@ -58,8 +54,49 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Slot />
-      <StatusBar style="auto" />
+      <View style={styles.root}>
+        <View style={styles.container}>
+          <View style={styles.gradient} />
+          <View style={styles.content}>
+            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+            <Slot />
+          </View>
+        </View>
+      </View>
     </ThemeProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  root: Platform.select({
+    web: {
+      flex: 1,
+      height: '100vh'
+    },
+    default: {
+      flex: 1
+    }
+  }) as any,
+  container: {
+    flex: 1
+  },
+  gradient: Platform.OS === 'ios' 
+    ? {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'yellow'
+      }
+    : Platform.OS === 'android'
+    ? {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'red'
+      }
+    : {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'pink'
+      },
+  content: {
+    flex: 1,
+    position: 'relative',
+    zIndex: 1
+  }
+});

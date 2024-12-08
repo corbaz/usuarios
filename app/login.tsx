@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Text, Platform } from 'react-native';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -10,12 +10,10 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      // Aquí iría la lógica de autenticación real
       if (email && password) {
-        // Por ahora, simularemos un login exitoso
         await AsyncStorage.setItem('userToken', 'dummy-token');
         await AsyncStorage.setItem('userEmail', email);
-        router.replace('/home'); // Cambiado a la ruta directa /home
+        router.replace('/home');
       } else {
         setError('Por favor complete todos los campos');
       }
@@ -68,7 +66,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'transparent',
   },
   formContainer: {
     width: '100%',
@@ -76,14 +74,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 30,
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    ...Platform.select({
+      web: {
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.25)',
+      },
+      default: {
+        elevation: 5,
+      },
+    }),
   },
   title: {
     fontSize: 24,
