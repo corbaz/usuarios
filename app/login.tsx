@@ -32,6 +32,7 @@ export default function LoginScreen() {
         <Text style={styles.title}>Iniciar Sesión</Text>
         {error ? <Text style={styles.error}>{error}</Text> : null}
         <TextInput
+          id='email'
           style={styles.input}
           placeholder="Email"
           placeholderTextColor="#666"
@@ -41,6 +42,7 @@ export default function LoginScreen() {
           keyboardType="email-address"
         />
         <TextInput
+          id='password'
           style={styles.input}
           placeholder="Contraseña"
           placeholderTextColor="#666"

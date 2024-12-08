@@ -8,6 +8,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, StyleSheet, Platform } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -18,8 +19,7 @@ export default function RootLayout() {
   });
 
   console.log('Current Platform:', Platform.OS);
-  console.log('Is iOS?:', Platform.OS === 'ios');
-
+  
   const segments = useSegments();
   const router = useRouter();
 
@@ -56,7 +56,23 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <View style={styles.root}>
         <View style={styles.container}>
-          <View style={styles.gradient} />
+          {Platform.OS === 'web' ? (
+            <View style={styles.gradient} />
+          ) : Platform.OS === 'ios' ? (
+            <LinearGradient
+              style={StyleSheet.absoluteFill}
+              colors={['green', 'blue', 'red']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            />
+          ) : (
+            <LinearGradient
+              style={StyleSheet.absoluteFill}
+              colors={['cyan', 'yellow', 'white']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            />
+          )}
           <View style={styles.content}>
             <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
             <Slot />
@@ -80,20 +96,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  gradient: Platform.OS === 'ios' 
-    ? {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'yellow'
-      }
-    : Platform.OS === 'android'
-    ? {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'red'
-      }
-    : {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'pink'
-      },
+  gradient: Platform.select({
+    web: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundImage: 'linear-gradient(45deg, blue 0%, red 50%, yellow 100%)'
+    },
+    default: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'blue'
+    }
+  }) || {},
   content: {
     flex: 1,
     position: 'relative',
