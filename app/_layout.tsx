@@ -68,7 +68,7 @@ export default function RootLayout() {
           ) : (
             <LinearGradient
               style={StyleSheet.absoluteFill}
-              colors={['cyan', 'yellow', 'white']}
+              colors={['red', 'green', 'blue']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
             />
